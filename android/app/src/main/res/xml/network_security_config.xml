@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Cấu hình Network Security:
+    - Bắt buộc toàn bộ kết nối sử dụng giao thức bảo mật HTTPS chuẩn.
+    - Không bật Cleartext HTTP.
+    - Không tắt kiểm tra chứng chỉ SSL; sử dụng kho chứng chỉ hệ thống (system CA).
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>
