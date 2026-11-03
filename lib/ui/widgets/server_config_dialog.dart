@@ -250,7 +250,7 @@ class _ServerConfigDialogState extends State<ServerConfigDialog> {
                   enableSuggestions: false,
                   decoration: InputDecoration(
                     labelText: 'Địa chỉ máy chủ (Base URL)',
-                    hintText: 'https://oldorangeapple30.conveyor.cloud/',
+                    hintText: AppConfig.defaultBaseUrl,
                     prefixIcon: const Icon(Icons.link_rounded),
                     suffixIcon: IconButton(
                       icon: const Icon(Icons.clear, size: 18),

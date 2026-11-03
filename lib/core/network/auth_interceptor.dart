@@ -35,10 +35,19 @@ class AuthInterceptor extends QueuedInterceptor {
   }
 
   /// Khi nhận phản hồi lỗi từ máy chủ:
-  /// Nếu gặp mã 401 (Hết hạn token hoặc không hợp lệ) -> Tự động xóa token và chuyển về màn Đăng nhập
+  /// Nếu gặp mã 401 (Hết hạn token hoặc không hợp lệ) -> Tự động xóa token và chuyển về màn Đăng nhập.
+  /// Lưu ý: Không kích hoạt đăng xuất khi lỗi 401 đến từ chính các endpoint xác thực (như sai mật khẩu ở /auth/login).
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
-    if (err.response?.statusCode == 401) {
+    final path = err.requestOptions.path;
+    final isAuthPublicEndpoint = path.contains('/auth/login') ||
+        path.contains('/auth/register') ||
+        path.contains('/auth/verify') ||
+        path.contains('/auth/resend-otp') ||
+        path.contains('/auth/forgot-password') ||
+        path.contains('/auth/reset-password');
+
+    if (err.response?.statusCode == 401 && !isAuthPublicEndpoint) {
       // 1. Xóa toàn bộ token và thông tin phiên đã lưu trong Keystore
       await authStorage.clearAuthData();
 

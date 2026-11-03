@@ -173,7 +173,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         ),
       );
 
-      // Chuyển hướng theo phương thức thanh toán
+      // Chuyển hướng theo phương thức thanh toán (dùng go để thay thế màn Checkout,
+      // tránh việc nhấn nút Back quay lại màn Checkout với giỏ hàng trống 0đ)
       if (_selectedPaymentMethod == 'QR') {
         context.go('/orders/${createdOrder.orderId}/payment-qr');
       } else {
@@ -204,7 +205,64 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       appBar: AppBar(
         title: const Text('Thanh Toán Đơn Hàng'),
       ),
-      body: SingleChildScrollView(
+      body: cart.items.isEmpty
+          ? Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.receipt_long_outlined,
+                      size: 64,
+                      color: AppColors.primary,
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Đơn hàng của bạn đã được tạo!',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Giỏ hàng hiện đang trống. Nếu bạn vừa đặt hàng và chưa thanh toán xong, bạn có thể mở lại mã QR trong mục "Đơn hàng".',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          final lastOrder = orderProvider.currentOrder;
+                          if (lastOrder != null) {
+                            context.go('/orders/${lastOrder.orderId}');
+                          } else {
+                            context.go('/orders');
+                          }
+                        },
+                        icon: const Icon(Icons.qr_code_2),
+                        label: const Text('Xem đơn hàng & Thanh toán QR'),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    TextButton(
+                      onPressed: () => context.go('/home'),
+                      child: const Text('Tiếp tục mua sắm'),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          : SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,

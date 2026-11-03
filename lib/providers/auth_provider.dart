@@ -18,6 +18,7 @@ class AuthProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool _isInitialized = false;
   String? _errorMessage;
+  String? _lastRegisteredEmail;
 
   AuthProvider({required this.authRepository});
 
@@ -26,6 +27,7 @@ class AuthProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get isInitialized => _isInitialized;
   String? get errorMessage => _errorMessage;
+  String? get lastRegisteredEmail => _lastRegisteredEmail;
 
   /// Khởi tạo khi mở app: Kiểm tra Keystore xem có token còn hạn không
   /// Nếu hợp lệ -> tải profile và vào thẳng trang chủ
@@ -101,6 +103,7 @@ class AuthProvider extends ChangeNotifier {
         password: password,
         confirmPassword: confirmPassword,
       );
+      _lastRegisteredEmail = email;
       _isLoading = false;
       notifyListeners();
       return true;
@@ -131,6 +134,7 @@ class AuthProvider extends ChangeNotifier {
         email: email,
         otpCode: otpCode,
       );
+      _lastRegisteredEmail = email;
       _isLoading = false;
       notifyListeners();
       return true;

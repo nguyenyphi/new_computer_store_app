@@ -6,12 +6,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Thứ tự ưu tiên xác định Base URL:
 /// 1. Địa chỉ người dùng tùy chỉnh và lưu trong SharedPreferences (trong app)
 /// 2. Biến môi trường lúc chạy: `--dart-define=BASE_URL=...`
-/// 3. Giá trị mặc định hiện tại: `https://oldorangeapple30.conveyor.cloud/`
+/// 3. Giá trị mặc định hiện tại: `https://widegreytrail12.conveyor.cloud/`
 class AppConfig {
   AppConfig._();
 
   /// Địa chỉ Backend mặc định (Conveyor Tunnel hiện tại)
-  static const String defaultBaseUrl = 'https://oldorangeapple30.conveyor.cloud/';
+  static const String defaultBaseUrl = 'https://widegreytrail12.conveyor.cloud/';
 
   /// Địa chỉ truyền qua tham số runtime: `--dart-define=BASE_URL=...`
   /// Nếu không truyền, mặc định nhận [defaultBaseUrl]
@@ -19,6 +19,15 @@ class AppConfig {
     'BASE_URL',
     defaultValue: defaultBaseUrl,
   );
+
+  /// Các địa chỉ cũ không còn dùng, nếu còn lưu trong máy sẽ tự bị xóa
+  static const List<String> _obsoleteUrls = [
+    'oldorangeapple30',
+    'othersparklycard97',
+    '192.168.1.57',
+    '10.0.2.2',
+    'localhost',
+  ];
 
   /// Key lưu trữ SharedPreferences cho địa chỉ tùy chỉnh trong app
   static const String keyCustomBaseUrl = 'custom_server_base_url';
@@ -32,17 +41,23 @@ class AppConfig {
   /// Tên ứng dụng
   static const String appName = 'Computer Store';
 
-  /// Thời gian chờ kết nối (5 giây)
-  static const Duration connectTimeout = Duration(seconds: 5);
+  /// Thời gian chờ kết nối (15 giây để ổn định qua Conveyor Tunnel)
+  static const Duration connectTimeout = Duration(seconds: 15);
 
-  /// Thời gian chờ nhận phản hồi từ server (8 giây)
-  static const Duration receiveTimeout = Duration(seconds: 8);
+  /// Thời gian chờ nhận phản hồi từ server (20 giây để kịp gửi email OTP SMTP)
+  static const Duration receiveTimeout = Duration(seconds: 20);
 
   /// Khởi tạo lấy Base URL hiệu lực từ SharedPreferences khi app khởi động.
   /// Ưu tiên: Saved URL > envBaseUrl (--dart-define) > defaultBaseUrl.
   static Future<String> initEffectiveBaseUrl() async {
     final prefs = await SharedPreferences.getInstance();
     final savedUrl = prefs.getString(keyCustomBaseUrl);
+    // Bỏ địa chỉ Conveyor cũ đã lưu (link Conveyor đổi mỗi lần backend chạy lại)
+    if (savedUrl != null && _obsoleteUrls.any(savedUrl.contains)) {
+      await prefs.remove(keyCustomBaseUrl);
+      _currentBaseUrl = normalizeUrl(envBaseUrl);
+      return _currentBaseUrl;
+    }
     if (savedUrl != null && savedUrl.trim().isNotEmpty) {
       _currentBaseUrl = normalizeUrl(savedUrl);
     } else {
@@ -88,8 +103,8 @@ class AppConfig {
       return 'Vui lòng nhập địa chỉ máy chủ';
     }
     final trimmed = value.trim();
-    if (!trimmed.startsWith('https://') && !trimmed.startsWith('http://')) {
-      return 'Địa chỉ máy chủ phải bắt đầu bằng https:// hoặc http://';
+    if (!trimmed.startsWith('https://')) {
+      return 'Địa chỉ máy chủ phải bắt đầu bằng https://';
     }
     final uri = Uri.tryParse(trimmed);
     if (uri == null || !uri.hasAuthority) {

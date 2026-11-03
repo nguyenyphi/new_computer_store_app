@@ -17,53 +17,46 @@ class AuthRepository {
     required String email,
     required String password,
   }) async {
-    try {
-      final authResponse = await authService.login(
-        email: email,
-        password: password,
-      );
+    final authResponse = await authService.login(
+      email: email,
+      password: password,
+    );
 
-      // Lưu Token vào Secure Storage
+    // Lưu Token vào Secure Storage
+    await authStorage.saveAuthData(
+      accessToken: authResponse.accessToken,
+      expiresAt: authResponse.expiresAt,
+      userData: authResponse.user?.toJson(),
+    );
+
+    // Nếu server trả user thì trả về, nếu không gọi GET /api/me
+    if (authResponse.user != null) {
+      return authResponse.user;
+    }
+
+    try {
+      final user = await authService.getProfile();
       await authStorage.saveAuthData(
         accessToken: authResponse.accessToken,
         expiresAt: authResponse.expiresAt,
-        userData: authResponse.user?.toJson(),
+        userData: user.toJson(),
       );
-
-      // Nếu server trả user thì trả về, nếu không gọi GET /api/me
-      if (authResponse.user != null) {
-        return authResponse.user;
-      }
-
-      try {
-        final user = await authService.getProfile();
-        await authStorage.saveAuthData(
-          accessToken: authResponse.accessToken,
-          expiresAt: authResponse.expiresAt,
-          userData: user.toJson(),
-        );
-        return user;
-      } catch (_) {
-        return null;
-      }
-    } catch (e) {
-      // Khi máy chủ LAN offline hoặc mất kết nối -> Cung cấp phiên đăng nhập demo cho sinh viên
-      final demoUser = UserModel(
-        userId: 1,
-        fullName: 'Nguyễn Y Phi',
-        email: email.isNotEmpty ? email : 'phi@example.com',
+      return user;
+    } catch (_) {
+      // Nếu token hợp lệ nhưng gọi /api/me lỗi tạm thời, vẫn tạo UserModel cơ bản từ email
+      // để đảm bảo authProvider.isAuthenticated == true
+      final fallbackUser = UserModel(
+        userId: 0,
+        fullName: email.split('@').first,
+        email: email,
         role: 'Customer',
-        phoneNumber: '0388166999',
-        isActive: true,
       );
-
       await authStorage.saveAuthData(
-        accessToken: 'demo_mock_jwt_token_for_offline_presentation_2026',
-        expiresAt: DateTime.now().add(const Duration(days: 7)),
-        userData: demoUser.toJson(),
+        accessToken: authResponse.accessToken,
+        expiresAt: authResponse.expiresAt,
+        userData: fallbackUser.toJson(),
       );
-
-      return demoUser;
+      return fallbackUser;
     }
   }
 
@@ -125,8 +118,10 @@ class AuthRepository {
 
   /// Kiểm tra phiên đăng nhập hiện tại khi mở app
   Future<UserModel?> checkAuthStatus() async {
+    final token = await authStorage.getAccessToken();
     final hasValidToken = await authStorage.hasValidToken();
-    if (!hasValidToken) {
+    if (!hasValidToken ||
+        token == 'demo_mock_jwt_token_for_offline_presentation_2026') {
       await authStorage.clearAuthData();
       return null;
     }

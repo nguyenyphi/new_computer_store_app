@@ -32,15 +32,18 @@ class PaymentQrModel {
     return PaymentQrModel(
       orderId: json['orderId'] != null ? (json['orderId'] as num).toInt() : 0,
       qrImageUrl: json['qrImageUrl'] as String? ??
+          json['fallbackQrImageUrl'] as String? ??
           json['qrCode'] as String? ??
-          'https://img.vietqr.io/image/970422-0388166999-compact2.png?amount=${rawAmount.toInt()}&addInfo=${json['transferContent'] ?? json['orderId']}',
+          '',
       amount: rawAmount,
       transferContent: json['transferContent'] as String? ??
-          'DH${json['orderId'] ?? ""}',
-      bankName: json['bankName'] as String? ?? 'MBBank (Ngân hàng Quân Đội)',
-      accountNumber: json['accountNumber'] as String? ?? '0388166999',
-      accountName: json['accountName'] as String? ?? 'NGUYEN Y PHI',
-      status: json['status'] as String? ?? 'Pending',
+          'Thanh toan don hang #${json['orderId'] ?? ""}',
+      bankName: json['bankName'] as String? ?? 'MoMo',
+      accountNumber: json['accountNumber'] as String? ?? '0845644491',
+      accountName: json['accountName'] as String? ?? 'Võ Anh Tuấn',
+      status: json['status'] as String? ??
+          json['orderStatus'] as String? ??
+          'Pending',
       paymentStatus: json['paymentStatus'] as String? ?? 'Pending',
     );
   }

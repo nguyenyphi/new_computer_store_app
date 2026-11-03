@@ -2,7 +2,7 @@
 
 **Học phần:** Lập trình thiết bị di động  
 **Backend:** ASP.NET Core 8.0 Web API  
-**Base URL Mặc định:** `https://oldorangeapple30.conveyor.cloud/` (được cấu hình tập trung tại `lib/core/config/app_config.dart`, có thể đổi trực tiếp trong app hoặc qua `--dart-define=BASE_URL=...`)  
+**Base URL Mặc định:** `https://widegreytrail12.conveyor.cloud/` (được cấu hình tập trung tại `lib/core/config/app_config.dart`, có thể đổi trực tiếp trong app hoặc qua `--dart-define=BASE_URL=...`)  
 **Định dạng dữ liệu:** JSON, camelCase  
 **Chuẩn xử lý lỗi:** RFC 7807 ProblemDetails
 

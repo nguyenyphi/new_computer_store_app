@@ -15,12 +15,12 @@
 ### ⚡ Thứ tự ưu tiên xác định Server URL:
 1. **Địa chỉ người dùng cấu hình trực tiếp trong App** (Lưu trong `SharedPreferences` - Ưu tiên cao nhất, đổi không cần build lại).
 2. **Biến môi trường khi chạy:** `--dart-define=BASE_URL=...`
-3. **Giá trị mặc định trong code:** `https://oldorangeapple30.conveyor.cloud/`
+3. **Giá trị mặc định trong code:** `https://widegreytrail12.conveyor.cloud/`
 
 ```dart
 class AppConfig {
   /// Địa chỉ Backend mặc định (Conveyor Tunnel)
-  static const String defaultBaseUrl = 'https://oldorangeapple30.conveyor.cloud/';
+  static const String defaultBaseUrl = 'https://widegreytrail12.conveyor.cloud/';
   ...
 }
 ```
@@ -31,7 +31,7 @@ class AppConfig {
 2. **Cách 2 (Từ màn hình Đăng nhập):**
    - **Nhấn giữ vào Logo hoặc Tiêu đề "Đăng Nhập"** (hoặc bấm vào icon Server ở góc trên bên phải màn hình).
 3. **Các thao tác trong hộp thoại Cài Đặt Máy Chủ:**
-   - **Nhập URL mới:** Ví dụ `https://new-subdomain.conveyor.cloud/` (app tự động kiểm tra và thêm `/` ở cuối).
+   - **Nhập URL mới:** Ví dụ `https://new-subdomain.conveyor.cloud/` (bắt buộc bắt đầu bằng `https://`, app tự thêm `/` ở cuối nếu thiếu).
    - **Nút "Kiểm tra kết nối":** Tự động gửi `GET {URL}/api/categories`, báo "Kết nối thành công" hoặc thông báo lỗi cụ thể bằng tiếng Việt.
    - **Nút "Lưu máy chủ":** Cập nhật Base URL của Dio ngay lập tức, lưu vào máy, xóa token cũ và đưa về màn Đăng nhập (hoàn toàn không cần tắt/mở lại app).
    - **Nút "Đặt lại mặc định":** Xóa cấu hình tùy chỉnh để quay về URL mặc định / dart-define.
@@ -57,7 +57,7 @@ class AppConfig {
 
 2. **Khởi chạy với tham số `--dart-define` (Ghi đè URL máy chủ lúc chạy):**
    ```bash
-   flutter run --dart-define=BASE_URL=https://oldorangeapple30.conveyor.cloud/
+   flutter run --dart-define=BASE_URL=https://widegreytrail12.conveyor.cloud/
    ```
    *(Hoặc truyền bất kỳ địa chỉ Conveyor / Server nào khác khi backend khởi động lại)*
 
@@ -217,7 +217,7 @@ lib/
 
 ## 🎬 5. Kịch bản Demo từng bước (Step-by-Step Demo Script)
 
-Chuẩn bị: Đảm bảo Backend ASP.NET Core đang chạy qua Conveyor (`https://oldorangeapple30.conveyor.cloud/`) hoặc đã được cấu hình trong app và ứng dụng Flutter đã được cài lên máy Android.
+Chuẩn bị: Đảm bảo Backend ASP.NET Core đang chạy qua Conveyor (`https://widegreytrail12.conveyor.cloud/`) hoặc đã được cấu hình trong app và ứng dụng Flutter đã được cài lên máy Android.
 
 ### Bước 1: Khởi chạy và Xem sản phẩm
 1. Mở ứng dụng `New Computer Store`. Ứng dụng sẽ mở vào **Trang chủ**.

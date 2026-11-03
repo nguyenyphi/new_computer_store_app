@@ -67,6 +67,16 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Đơn Hàng #DH${order.orderId}'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/orders');
+            }
+          },
+        ),
       ),
       body: RefreshIndicator(
         onRefresh: () => orderProvider.loadOrderDetail(widget.orderId),

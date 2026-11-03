@@ -5,7 +5,7 @@
 **Backend:** ASP.NET Core 8.0 Web API  
 **Cơ sở dữ liệu:** SQL Server 2022 Docker (`nguyenyphi_1669_DB` tại `127.0.0.1,1434`)  
 **Base URL:**
-- Mặc định (Conveyor): `https://oldorangeapple30.conveyor.cloud/`
+- Mặc định (Conveyor): `https://widegreytrail12.conveyor.cloud/`
 - Cấu hình tập trung tại `lib/core/config/app_config.dart`, hỗ trợ `--dart-define=BASE_URL=...` và đổi trực tiếp trong app.
 
 ---

@@ -95,14 +95,21 @@ class _PaymentQrScreenState extends State<PaymentQrScreen> {
       );
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Thanh Toán Đơn #${widget.orderId}'),
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: () => context.go('/orders'),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        context.go('/orders/${widget.orderId}');
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Thanh Toán Đơn #${widget.orderId}'),
+          leading: IconButton(
+            icon: const Icon(Icons.close),
+            tooltip: 'Xem đơn hàng',
+            onPressed: () => context.go('/orders/${widget.orderId}'),
+          ),
         ),
-      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         child: Column(
@@ -233,7 +240,7 @@ class _PaymentQrScreenState extends State<PaymentQrScreen> {
                     _buildInfoRow(
                       context,
                       'Ngân hàng',
-                      qrData.bankName ?? 'MBBank',
+                      qrData.bankName ?? 'MoMo',
                       null,
                     ),
                     const Divider(height: 18),
@@ -242,7 +249,7 @@ class _PaymentQrScreenState extends State<PaymentQrScreen> {
                     _buildInfoRow(
                       context,
                       'Chủ tài khoản',
-                      qrData.accountName ?? 'NGUYEN Y PHI',
+                      qrData.accountName ?? 'Võ Anh Tuấn',
                       null,
                     ),
                     const Divider(height: 18),
@@ -251,9 +258,9 @@ class _PaymentQrScreenState extends State<PaymentQrScreen> {
                     _buildInfoRow(
                       context,
                       'Số tài khoản',
-                      qrData.accountNumber ?? '0388166999',
+                      qrData.accountNumber ?? '0845644491',
                       () => _copyToClipboard(
-                          'Số tài khoản', qrData.accountNumber ?? '0388166999'),
+                          'Số tài khoản', qrData.accountNumber ?? '0845644491'),
                     ),
                     const Divider(height: 18),
 
@@ -290,6 +297,7 @@ class _PaymentQrScreenState extends State<PaymentQrScreen> {
           ],
         ),
       ),
+    ),
     );
   }
 

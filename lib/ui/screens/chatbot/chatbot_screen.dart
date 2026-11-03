@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/currency_formatter.dart';
 import '../../../data/models/chat_message_model.dart';
@@ -66,8 +67,9 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
               children: [
                 CircleAvatar(
                   radius: 20,
-                  backgroundColor: (isDark ? AppColors.primaryDark : AppColors.primary)
-                      .withValues(alpha: 0.15),
+                  backgroundColor:
+                      (isDark ? AppColors.primaryDark : AppColors.primary)
+                          .withValues(alpha: 0.15),
                   child: Icon(
                     Icons.smart_toy_rounded,
                     color: isDark ? AppColors.primaryDark : AppColors.primary,
@@ -98,10 +100,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
               children: [
                 Text(
                   'Trợ Lý AI Máy Tính',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 Text(
                   'Tư vấn trực tuyến 24/7 • Sẵn sàng',
@@ -125,7 +124,8 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                 builder: (ctx) => AlertDialog(
                   title: const Text('Làm mới hội thoại?'),
                   content: const Text(
-                      'Toàn bộ lịch sử trò chuyện hiện tại sẽ được khởi động lại.'),
+                    'Toàn bộ lịch sử trò chuyện hiện tại sẽ được khởi động lại.',
+                  ),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(ctx),
@@ -187,8 +187,10 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
           children: [
             Flexible(
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   color: isDark ? AppColors.primaryDark : AppColors.primary,
                   borderRadius: const BorderRadius.only(
@@ -236,8 +238,10 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
               const SizedBox(width: 10),
               Flexible(
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 13,
+                  ),
                   decoration: BoxDecoration(
                     color: isDark ? AppColors.darkCard : Colors.white,
                     borderRadius: const BorderRadius.only(
@@ -247,8 +251,9 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                       bottomRight: Radius.circular(18),
                     ),
                     border: Border.all(
-                      color:
-                          isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBorder,
                     ),
                     boxShadow: [
                       BoxShadow(
@@ -258,8 +263,8 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                       ),
                     ],
                   ),
-                  child: Text(
-                    msg.text,
+                  child: Text.rich(
+                    _boldSpans(msg.text),
                     style: TextStyle(
                       color: isDark
                           ? AppColors.darkTextPrimary
@@ -301,13 +306,11 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                 runSpacing: 6,
                 children: msg.quickReplies!.map((reply) {
                   return ActionChip(
-                    label: Text(
-                      reply,
-                      style: const TextStyle(fontSize: 12.5),
-                    ),
+                    label: Text(reply, style: const TextStyle(fontSize: 12.5)),
                     onPressed: () => bot.selectQuickReply(reply),
-                    backgroundColor:
-                        isDark ? AppColors.darkSurface : Colors.grey.shade100,
+                    backgroundColor: isDark
+                        ? AppColors.darkSurface
+                        : Colors.grey.shade100,
                   );
                 }).toList(),
               ),
@@ -348,13 +351,16 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
             child: SizedBox(
               height: 100,
               width: double.infinity,
-              child: product.imageUrl != null &&
+              child:
+                  product.imageUrl != null &&
                       product.imageUrl!.trim().isNotEmpty
                   ? CachedNetworkImage(
                       imageUrl: product.imageUrl!,
                       fit: BoxFit.cover,
-                      placeholder: (_, _) => Container(color: Colors.grey.shade200),
-                      errorWidget: (_, _, _) => const Icon(Icons.computer, size: 36),
+                      placeholder: (_, _) =>
+                          Container(color: Colors.grey.shade200),
+                      errorWidget: (_, _, _) =>
+                          const Icon(Icons.computer, size: 36),
                     )
                   : const Icon(Icons.computer, size: 36),
             ),
@@ -390,8 +396,9 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.zero,
-                      backgroundColor:
-                          isDark ? AppColors.primaryDark : AppColors.primary,
+                      backgroundColor: isDark
+                          ? AppColors.primaryDark
+                          : AppColors.primary,
                       foregroundColor: Colors.white,
                       textStyle: const TextStyle(
                         fontSize: 11,
@@ -421,8 +428,9 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
           CircleAvatar(
             radius: 16,
             backgroundColor:
-                (isDark ? AppColors.primaryDark : AppColors.primary)
-                    .withValues(alpha: 0.15),
+                (isDark ? AppColors.primaryDark : AppColors.primary).withValues(
+                  alpha: 0.15,
+                ),
             child: Icon(
               Icons.smart_toy_rounded,
               color: isDark ? AppColors.primaryDark : AppColors.primary,
@@ -483,8 +491,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                   color: isDark ? AppColors.darkSurface : Colors.grey.shade100,
                   borderRadius: BorderRadius.circular(24),
                   border: Border.all(
-                    color:
-                        isDark ? AppColors.darkBorder : Colors.grey.shade300,
+                    color: isDark ? AppColors.darkBorder : Colors.grey.shade300,
                   ),
                 ),
                 child: TextField(
@@ -496,8 +503,10 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                     hintText: 'Hỏi về Laptop, PC, Bảo hành, Voucher...',
                     hintStyle: TextStyle(fontSize: 13.5),
                     border: InputBorder.none,
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 18,
+                      vertical: 10,
+                    ),
                   ),
                 ),
               ),
@@ -505,10 +514,15 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
             const SizedBox(width: 8),
             CircleAvatar(
               radius: 22,
-              backgroundColor:
-                  isDark ? AppColors.primaryDark : AppColors.primary,
+              backgroundColor: isDark
+                  ? AppColors.primaryDark
+                  : AppColors.primary,
               child: IconButton(
-                icon: const Icon(Icons.send_rounded, color: Colors.white, size: 20),
+                icon: const Icon(
+                  Icons.send_rounded,
+                  color: Colors.white,
+                  size: 20,
+                ),
                 onPressed: () => _handleSend(bot),
               ),
             ),
@@ -517,4 +531,18 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
       ),
     );
   }
+}
+
+/// Chuyển văn bản có **in đậm** thành TextSpan để hiển thị đẹp
+TextSpan _boldSpans(String text) {
+  final parts = text.split('**');
+  return TextSpan(
+    children: [
+      for (var i = 0; i < parts.length; i++)
+        TextSpan(
+          text: parts[i],
+          style: i.isOdd ? const TextStyle(fontWeight: FontWeight.w700) : null,
+        ),
+    ],
+  );
 }

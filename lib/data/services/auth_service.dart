@@ -43,31 +43,21 @@ class AuthService {
     return (response is Map<String, dynamic>) ? response : {};
   }
 
-  /// Xác thực mã OTP kích hoạt tài khoản: POST /api/auth/verify-otp (hỗ trợ fallback /api/auth/verify-email)
+  /// Xác thực mã OTP kích hoạt tài khoản: POST /api/auth/verify-otp
+  /// Gửi đồng thời cả 'otp' (theo chuẩn VerifyOtpRequestDto của Backend) và 'otpCode' để tương thích.
   Future<Map<String, dynamic>> verifyOtp({
     required String email,
     required String otpCode,
   }) async {
-    try {
-      final response = await apiClient.post(
-        '/api/auth/verify-otp',
-        data: {
-          'email': email,
-          'otpCode': otpCode,
-        },
-      );
-      return (response is Map<String, dynamic>) ? response : {};
-    } catch (e) {
-      // Fallback endpoint nếu backend dùng verify-email
-      final response = await apiClient.post(
-        '/api/auth/verify-email',
-        data: {
-          'email': email,
-          'otpCode': otpCode,
-        },
-      );
-      return (response is Map<String, dynamic>) ? response : {};
-    }
+    final response = await apiClient.post(
+      '/api/auth/verify-otp',
+      data: {
+        'email': email,
+        'otp': otpCode,
+        'otpCode': otpCode,
+      },
+    );
+    return (response is Map<String, dynamic>) ? response : {};
   }
 
   /// Gửi lại mã OTP: POST /api/auth/resend-otp
@@ -97,6 +87,7 @@ class AuthService {
   }
 
   /// Đặt lại mật khẩu với mã OTP: POST /api/auth/reset-password
+  /// Gửi đồng thời 'token'/'confirmNewPassword' (theo ResetPasswordRequestDto) và 'otpCode'/'confirmPassword'.
   Future<Map<String, dynamic>> resetPassword({
     required String email,
     required String otpCode,
@@ -107,8 +98,10 @@ class AuthService {
       '/api/auth/reset-password',
       data: {
         'email': email,
+        'token': otpCode,
         'otpCode': otpCode,
         'newPassword': newPassword,
+        'confirmNewPassword': confirmPassword,
         'confirmPassword': confirmPassword,
       },
     );

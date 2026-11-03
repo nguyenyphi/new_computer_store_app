@@ -93,7 +93,7 @@ void main() async {
           create: (ctx) => OrderProvider(orderRepository: orderRepository),
         ),
         ChangeNotifierProvider<ChatbotProvider>(
-          create: (_) => ChatbotProvider(),
+          create: (_) => ChatbotProvider(catalogRepository: catalogRepository),
         ),
       ],
       child: const ComputerStoreApp(),

@@ -24,7 +24,7 @@ class OrderDetailModel {
 
   factory OrderDetailModel.fromJson(Map<String, dynamic> json) {
     String name = json['productName'] as String? ?? '';
-    String? img = json['imageUrl'] as String?;
+    String? img = json['imageUrl'] as String? ?? json['productImageUrl'] as String?;
 
     if (json['product'] is Map<String, dynamic>) {
       final p = json['product'] as Map<String, dynamic>;
@@ -34,7 +34,9 @@ class OrderDetailModel {
 
     final pPrice = json['price'] != null
         ? (json['price'] as num).toDouble()
-        : 0.0;
+        : (json['originalPrice'] != null
+            ? (json['originalPrice'] as num).toDouble()
+            : 0.0);
     final fPrice = json['finalPrice'] != null
         ? (json['finalPrice'] as num).toDouble()
         : pPrice;
@@ -116,8 +118,9 @@ class OrderModel {
     }
 
     List<OrderDetailModel> details = [];
-    if (json['orderDetails'] is List) {
-      details = (json['orderDetails'] as List)
+    final rawItems = json['orderDetails'] ?? json['items'];
+    if (rawItems is List) {
+      details = rawItems
           .map((item) => OrderDetailModel.fromJson(item as Map<String, dynamic>))
           .toList();
     }
@@ -128,7 +131,11 @@ class OrderModel {
 
     final count = json['itemCount'] != null
         ? (json['itemCount'] as num).toInt()
-        : (details.isNotEmpty ? details.fold(0, (sum, i) => sum + i.quantity) : 1);
+        : (json['totalQuantity'] != null
+            ? (json['totalQuantity'] as num).toInt()
+            : (details.isNotEmpty
+                ? details.fold(0, (sum, i) => sum + i.quantity)
+                : 1));
 
     return OrderModel(
       orderId: json['orderId'] != null

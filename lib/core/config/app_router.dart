@@ -49,8 +49,12 @@ class AppRouter {
             location == '/forgot-password' ||
             location == '/reset-password';
 
-        // 1. Đã đăng nhập mà cố vào màn auth -> Chuyển về trang chủ
+        // 1. Đã đăng nhập mà cố vào màn auth -> Chuyển về trang đích (nếu có) hoặc trang chủ
         if (isAuthenticated && isAuthRoute) {
+          final from = state.uri.queryParameters['from'];
+          if (from != null && from.isNotEmpty) {
+            return from;
+          }
           return '/home';
         }
 

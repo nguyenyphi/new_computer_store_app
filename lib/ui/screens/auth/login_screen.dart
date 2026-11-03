@@ -23,9 +23,13 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    // Tự động điền tài khoản mẫu theo tài liệu docs/API.md
-    _emailController.text = 'phi@example.com';
-    _passwordController.text = 'Password123@';
+    // Nếu chuyển về từ màn Đăng ký / Xác thực OTP thì điền sẵn email đó,
+    // nếu không thì điền tài khoản mẫu để tiện thử nghiệm.
+    final lastEmail = context.read<AuthProvider>().lastRegisteredEmail;
+    _emailController.text =
+        (lastEmail != null && lastEmail.isNotEmpty) ? lastEmail : 'phi@example.com';
+    _passwordController.text =
+        (lastEmail != null && lastEmail.isNotEmpty) ? '' : 'Password123@';
   }
 
   @override
